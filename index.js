@@ -181,3 +181,20 @@ document.addEventListener('click', () => {
         muteButton.innerHTML = '<i class="fas fa-volume-up"></i>';
     }
 }, { once: true });
+
+window.addEventListener('load', function() {
+    const video = document.querySelector('video');
+    const loader = document.querySelector('.loader');
+    
+    if (video.readyState >= 3) {
+        loader.classList.add('loader-hidden');
+    } else {
+        video.addEventListener('canplaythrough', function() {
+            loader.classList.add('loader-hidden');
+        });
+    }
+    
+    setTimeout(function() {
+        loader.classList.add('loader-hidden');
+    }, 3000);
+});
