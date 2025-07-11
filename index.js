@@ -186,15 +186,28 @@ window.addEventListener('load', function() {
     const video = document.querySelector('video');
     const loader = document.querySelector('.loader');
     
-    if (video.readyState >= 3) {
+    function hideLoader() {
         loader.classList.add('loader-hidden');
-    } else {
-        video.addEventListener('canplaythrough', function() {
-            loader.classList.add('loader-hidden');
+        loader.addEventListener('transitionend', () => {
+            loader.remove();
         });
     }
+
+    if (video.readyState >= 3) {
+        hideLoader();
+    } else {
+        video.addEventListener('canplaythrough', hideLoader);
+        video.addEventListener('error', hideLoader);
+        
+        setTimeout(hideLoader, 5000);
+    }
     
-    setTimeout(function() {
-        loader.classList.add('loader-hidden');
-    }, 3000);
+    video.load();
 });
+
+document.addEventListener('click', function() {
+    const video = document.querySelector('video');
+    if (video.paused) {
+        video.play().catch(e => console.log("Video play prevented:", e));
+    }
+}, { once: true });
